@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
@@ -37,9 +39,10 @@ namespace OKExSDK
 
         private int retryNum = 0;
         public int retryLimit { get; set; } = 20;
-
-        public WebSocketor()
+        public ILogger _logger = null;
+        public WebSocketor(ILogger logger = null)
         {
+            this._logger = logger ?? NullLogger.Instance;
             ws = new ClientWebSocket();
             closeCheckTimer.Interval = 31000;
             closeCheckTimer.Elapsed += async (s, e) =>
@@ -349,7 +352,7 @@ namespace OKExSDK
                         }
                         catch (Exception e)
                         {
-                            File.AppendAllText(@"D:\\error.txt", "CreateDate" + DateTime.Now.ToString() + "detail[0]:" + detail[0].Replace("\"", "") + "\n" + e.Message + "\n" + e.StackTrace + "\n");
+                            this._logger.LogError(e, @"CreateDate" + DateTime.Now.ToString() + "detail[0]:" + detail[0].Replace("\"", "") + "\n" + e.Message + "\n" + e.StackTrace + "\n");
                         }
                     }
 
@@ -388,7 +391,7 @@ namespace OKExSDK
                             }
                             catch (Exception e)
                             {
-                                File.AppendAllText(@"D:\\error.txt", "CreateDate" + DateTime.Now.ToString() + "detail[0]:" + detail[0].Replace("\"", "") + "\n" + e.Message + "\n" + e.StackTrace + "\n");
+                                this._logger.LogError(e, "CreateDate" + DateTime.Now.ToString() + "detail[0]:" + detail[0].Replace("\"", "") + "\n" + e.Message + "\n" + e.StackTrace + "\n");
                             }
                         }
                     }
@@ -411,7 +414,7 @@ namespace OKExSDK
                         }
                         catch (Exception e)
                         {
-                            File.AppendAllText(@"D:\\error.txt", "CreateDate" + DateTime.Now.ToString() + "detail[0]:" + detail[0].Replace("\"", "") + "\n" + e.Message + "\n" + e.StackTrace + "\n");
+                            this._logger.LogError(e, "CreateDate" + DateTime.Now.ToString() + "detail[0]:" + detail[0].Replace("\"", "") + "\n" + e.Message + "\n" + e.StackTrace + "\n");
                         }
                     }
 
@@ -451,7 +454,7 @@ namespace OKExSDK
                             }
                             catch (Exception e)
                             {
-                                File.AppendAllText(@"D:\\error.txt", "CreateDate" + DateTime.Now.ToString() + "detail[0]:" + detail[0].Replace("\"", "") + "\n" + e.Message + "\n" + e.StackTrace + "\n");
+                                this._logger.LogError(e, "CreateDate" + DateTime.Now.ToString() + "detail[0]:" + detail[0].Replace("\"", "") + "\n" + e.Message + "\n" + e.StackTrace + "\n");
                             }
                         }
                     }
